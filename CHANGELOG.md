@@ -2,6 +2,18 @@
 
 ## Image 0.24.0
 
+This is the changelog for Image version 0.25.0 released on ______, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/image/tags)
+
+### Enhancements
+
+* Adds `Image.warp_perspective/3` to apply warp transformations to a region of an image.
+
+* Adds `Image.Detect` module for object detection within an image. Includes functions for specifically for face detection and other functions for more general object detection. Required [Evision](https://hex.pm/packages/evision) to be configured as a dependency.
+
+* Adds `Image.from_binary!/2` to align with `Image.from_binary/2`.
+
+## Image 0.24.0
+
 This is the changelog for Image version 0.24.0 released on February 6th, 2023.  For older changelogs please consult the release tag on [GitHub](https://github.com/kipcole9/image/tags)
 
 ### Enhancements

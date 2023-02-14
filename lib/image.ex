@@ -793,6 +793,39 @@ defmodule Image do
   end
 
   @doc """
+  Returns a image created from an in-memory binary representation
+  of an image or raises an exception.
+
+  The binary must be a complete formatted image such as that
+  returned from `File.read!/1`.
+
+  ### Arguments
+
+  * `binary` is a binary representation of a formatted image
+
+  * `options` is a keyword list of options. See `Image.open/2`
+    for the list of applicable options.
+
+  ### Returns
+
+  * `image` or
+
+  * raises an exception.
+
+  """
+  @doc subject: "Load and save", since: "0.25.0"
+
+  @spec from_binary!(binary :: binary(), options :: Open.image_open_options()) ::
+          Vimage.t() | no_return()
+
+  def from_binary!(binary, options \\ []) when is_binary(binary) do
+    case from_binary(binary, options) do
+      {:ok, image} -> image
+      {:error, reason} -> raise Image.Error, reason
+    end
+  end
+
+  @doc """
   Opens an image file for image processing
   returning an image or raising an exception.
 
@@ -5061,6 +5094,11 @@ defmodule Image do
         `height, width, channels` which is commonly use
         for machine learning models.
 
+    ### Notes
+
+    * This function is only available if [Nx](https://hex.pm/packages/nx)
+      is configured as a dependency.
+
     ### Returns
 
     * An `t:Nx.Tensor.t/0` tensor suitable for use in
@@ -5137,6 +5175,9 @@ defmodule Image do
 
     ### Notes
 
+    * This function is only available if [Nx](https://hex.pm/packages/nx)
+      is configured as a dependency.
+
     In order to convert a tensor into an image it must
     satisfy these constraints:
 
@@ -5206,6 +5247,9 @@ defmodule Image do
         `Evision` requires the data to be in `bgr` order. This function
         also reorders the data appropriately.
 
+      * This function is only available if [Evision](https://hex.pm/packages/evision)
+        and [Nx](https://hex.pm/packages/nx) are configured as a dependencies.
+
       """
       @dialyzer {:nowarn_function, {:to_evision, 2}}
 
@@ -5243,6 +5287,9 @@ defmodule Image do
         `Evision` requires the data to be in `bgr` order. This function
         also reorders the data appropriately.
 
+      * This function is only available if [Evision](https://hex.pm/packages/evision)
+        and [Nx](https://hex.pm/packages/nx) are configured as a dependencies.
+
       """
       @dialyzer {:nowarn_function, {:from_evision, 1}}
 
@@ -5272,6 +5319,47 @@ defmodule Image do
        "The tensor must have the shape {height, width, bands} with bands between" <>
          "1 and 5. Found shape #{inspect(shape)}"}
     end
+  end
+
+  if Code.ensure_loaded?(Evision) do
+    @doc """
+    Performs a persective warp using selected points
+    of an image returning an image warped to the
+    second set of points.
+
+    ### Arguments
+
+    * `image` is any `t:Vimage.t/0`
+
+    * `source` is list of four 2-element lists
+    describing the quadrilateral region of interest
+    in the `image`.
+
+    * `options` is a keyword list of options
+
+    ### Options
+
+    * `destination` is list of four 2-element lists
+    describing the quadrilateral region of the destination
+    image.  The default is the dimenstions of `image`.
+
+    ### Notes
+
+    This function is only available is [Evision](https://hex.pm/packages/evision)
+    is configured as a dependency.
+
+    ### Returns
+
+    * `{:ok, image}` being the warp transformed image, or
+
+    * `{:error, reason}`
+
+    """
+
+    def warp_transform(%Vimage{} = image, [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = source, options \\ []) do
+
+    end
+
   end
 
   @doc """
